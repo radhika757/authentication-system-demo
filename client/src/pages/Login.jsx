@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Alert from "react-bootstrap/Alert";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -9,6 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [res, setResponse] = useState("");
 
+  axios.defaults.withCredentials = true;
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
@@ -17,21 +18,34 @@ const Login = () => {
         password: password,
       })
       .then((response) => {
-        console.log(response.data);
-        console.log(response.data[0].name);
-        setResponse(response.data[0].name);
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
+        // console.log(response.data['message']);
+        if (response.data[0].name) {
+          setResponse(response.data[0].name);
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        } else {
+          setResponse("Invalid Combination, please try again");
+        }
       });
   };
+  //To check if the user is logged in
+  useEffect(() => {
+    axios.get("http://localhost:3001/login").then((Response) => {
+      if (Response.data.loggedIn == true) {
+        setResponse(Response.data.user[0].username);
+        console.log(Response);
+      }
+    });
+  }, []);
   return (
     <>
-      {res ? (
+      {res && <Alert variant="info">Welcome {res}</Alert>}
+      {/* {res ? (
         <Alert variant="success">Welcome {res}</Alert>
       ) : (
         <Alert variant="warning">Wrong Combination</Alert>
-      )}
+      )} */}
 
       <div
         style={{

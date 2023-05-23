@@ -9,6 +9,8 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState("");
 
+  // axios.defaults.withCredentials = true; 
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(name);
@@ -29,7 +31,9 @@ const Register = () => {
 
   return (
     <>
-      <Alert variant="success" className="p-2">{user}</Alert>
+      <Alert variant="success" className="p-2">
+        {user}
+      </Alert>
       <div
         style={{
           display: "flex",
